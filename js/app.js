@@ -14,9 +14,9 @@ const ItemCtrl = (function() {
   // Data Structures (State similar to React and Angular)
   const data = {
     items: [
-        {id: 0, name: 'Apple', calories: 500},
-        {id: 1, name: 'Bread', calories: 250},
-        {id: 2, name: 'Chocolates', calories: 650},
+      { id: 0, name: "Apple", calories: 500 },
+      { id: 1, name: "Bread", calories: 250 },
+      { id: 2, name: "Chocolates", calories: 650 }
     ],
     currentItem: null,
     totalCalories: 0
@@ -24,6 +24,7 @@ const ItemCtrl = (function() {
 
   //   Public Methods
   return {
+    getItems: () => data.items,
     logData: () => data
   };
 })();
@@ -31,9 +32,25 @@ const ItemCtrl = (function() {
 // UI Controller
 const UICtrl = (function() {
   //   console.log("UI Controller");
+  const UISelectors = {
+    itemList: '#item-list'
+  };
 
   //   Public Methods
-  return {};
+  return {
+    populateItemList: items => {
+      let html = "";
+
+      items.forEach(item => {
+        html += `<li class="collection-item" id="item-${item.id}">
+        <strong>${item.name}: </strong><em>${item.calories} Calories</em>
+        <a href="" class="secondary-content"><i class="edit-item fa fa-pencil"></i></a>
+      </li>`;
+      });
+
+      document.querySelector(UISelectors.itemList).innerHTML = html;
+    }
+  };
 })();
 
 // App Controller
@@ -42,7 +59,14 @@ const AppCtrl = (function(ItemCtrl, UICtrl) {
   // For the Initialization
   //   Public Methods
   return {
-    init: () => console.log("Initializing App...")
+    init: () => {
+      // Fetch the items from the data structure
+      const items = ItemCtrl.getItems();
+      // console.log(items);
+
+      // Populate the list with the items
+      UICtrl.populateItemList(items);
+    }
   };
 })(ItemCtrl, UICtrl);
 
